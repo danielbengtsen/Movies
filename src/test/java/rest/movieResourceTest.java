@@ -1,11 +1,17 @@
 package rest;
 
-import entities.RenameMe;
+import DTOs.MovieDTO;
+import DTOs.MoviesDTO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import entities.Movie;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.parsing.Parser;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.core.UriBuilder;
@@ -14,6 +20,8 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,11 +29,15 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class RenameMeResourceTest {
+public class movieResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
-    private static RenameMe r1,r2;
+    
+    private final Movie m1 = new Movie(1994, "Forrest Gump", new String[]{"Tom Hanks","Robin Wright"});
+    private final Movie m2 = new Movie(2009, "Coraline", new String[]{"Coraline Jones","Wybie Lovat"});
+    private static final Gson GSON = new GsonBuilder().create();
+    
     
     static final URI BASE_URI = UriBuilder.fromUri(SERVER_URL).port(SERVER_PORT).build();
     private static HttpServer httpServer;
@@ -62,13 +74,12 @@ public class RenameMeResourceTest {
     @BeforeEach
     public void setUp() {
         EntityManager em = emf.createEntityManager();
-        r1 = new RenameMe("Some txt","More text");
-        r2 = new RenameMe("aaa","bbb");
+       
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(r1);
-            em.persist(r2); 
+            em.createNamedQuery("Movie.deleteAllRows").executeUpdate();
+                em.persist(m1);
+                em.persist(m2); 
             em.getTransaction().commit();
         } finally { 
             em.close();
@@ -78,27 +89,59 @@ public class RenameMeResourceTest {
     @Test
     public void testServerIsUp() {
         System.out.println("Testing is server UP");
-        given().when().get("/xxx").then().statusCode(200);
+        given()
+        .when()
+        .get("/movie")
+        .then()
+        .statusCode(200);
     }
    
-    //This test assumes the database contains two rows
     @Test
     public void testDummyMsg() throws Exception {
         given()
         .contentType("application/json")
-        .get("/xxx/").then()
+        .get("/movie/").then()
         .assertThat()
         .statusCode(HttpStatus.OK_200.getStatusCode())
         .body("msg", equalTo("Hello World"));   
     }
+
     
     @Test
     public void testCount() throws Exception {
         given()
         .contentType("application/json")
-        .get("/xxx/count").then()
+        .get("/movie/count").then()
         .assertThat()
         .statusCode(HttpStatus.OK_200.getStatusCode())
         .body("count", equalTo(2));   
+    }
+    
+    @Disabled
+    @Test
+    public void testSpecificTitle() throws Exception {
+        given()
+        .contentType("application/json")
+        .get("/movie/title/spanden").then()
+                .assertThat()
+                .statusCode(HttpStatus.OK_200.getStatusCode())
+                .body("id", equalTo(m1.getId().longValue()));
+    }
+    
+    @Test
+    public void testGetAllMovies() throws Exception {
+        List<Movie> movieList = new ArrayList();
+        movieList.add(m1);
+        movieList.add(m2);
+        MoviesDTO moviesDTO = new MoviesDTO(movieList);
+        
+        given()
+        .contentType("application/json")
+        .get("movie/all").then()
+        .assertThat()
+        .statusCode(HttpStatus.OK_200.getStatusCode())
+        .body("size()", is(2))
+        .and()
+        .body("title", hasItems("Forrest Gump", "Coraline"));
     }
 }
