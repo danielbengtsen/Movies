@@ -119,7 +119,7 @@ public class MovieFacadeTest {
         
         List<MovieDTO> result = facade.getAllMovies();
         
-        assertEquals(expected.get(1).getId(), result.get(1).getId());
+        assertEquals(expected.size(), result.size());
     }
     
     
