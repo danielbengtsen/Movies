@@ -122,7 +122,7 @@ public class movieResourceTest {
     public void testSpecificTitle() throws Exception {
         given()
         .contentType("application/json")
-        .get("/movie/title/spanden").then()
+        .get("/movie/title/gump").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("id", equalTo(m1.getId().longValue()));
@@ -143,5 +143,16 @@ public class movieResourceTest {
         .body("size()", is(2))
         .and()
         .body("title", hasItems("Forrest Gump", "Coraline"));
+    }
+    
+
+    @Test
+    public void testGetMovieById() throws Exception {
+        given()
+        .contentType("application/json")
+        .get("movie/2").then()
+        .assertThat()
+        .statusCode(HttpStatus.OK_200.getStatusCode())
+        .body("title", equalTo("Forrest Gump"));
     }
 }
