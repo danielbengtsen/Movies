@@ -145,7 +145,7 @@ public class movieResourceTest {
         .body("title", hasItems("Forrest Gump", "Coraline"));
     }
     
-    //@Disabled
+    @Disabled
     @Test
     public void testGetMovieById() throws Exception {
         given()
