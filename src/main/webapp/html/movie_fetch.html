@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Movie API</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/movies_style.css">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-3"></div>
+                
+                <div class="col-6">
+                    <h3>Movie API</h3>
+                    <h4 class="under_title">Alle film</h4>
+                    <table class="table">
+                        <tr>
+                            <th>Id</th>
+                            <th>Titel</th>
+                            <th>År</th>
+                            <th>Medvirkende</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Harry Potter and The Chamber of Secrets</td>
+                            <td>2002</td>
+                            <td>Daniel Radcliffe, Emma Watson, Rubert Grint</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Coraline</td>
+                            <td>2009</td>
+                            <td>Coraline Jones, Wybie Lovat</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Forrest Gump</td>
+                            <td>1994</td>
+                            <td>Tom Hanks, Robin Wright, Sally Field</td>
+                        </tr>
+                    </table>
+
+                    <button class="button_under_table">Fetch all movies</button>
+
+                    <h4 class="under_title">Specifik film</h4>
+                    <table class="table">
+                        <tr>
+                            <th>Id</th>
+                            <th>Titel</th>
+                            <th>År</th>
+                            <th>Medvirkende</th>
+                        </tr>
+                            <td>2</td>
+                            <td>Coraline</td>
+                            <td>2009</td>
+                            <td>Coraline Jones, Wybie Lovat</td>
+                        </tr>
+                    </table>
+
+                    <form>
+                        <input type="text" id="movie_by_id" placeholder="Insert ID..." value="2">
+                        <input class="button_under_table" type="submit" value="Fetch movie by ID">
+                    </form>
+                </div>
+                
+                <div class="col-3"></div>
+            </div>
+        </div>
+    </body>
+</html>
+        
